@@ -23,9 +23,7 @@ class CartItem(BaseModel):
     name: str = Field(..., description="Product name")
     price: float = Field(..., description="Product price")
     quantity: int = Field(..., description="Quantity in cart")
-    autototal: float = Field(
-        ..., description="Total price for this items (price * quantity)"
-    )
+    subtotal: float = Field(..., description="Total price for this item")
 
     image_url: Optional[str] = Field(None, description="Product iamge URL")
 

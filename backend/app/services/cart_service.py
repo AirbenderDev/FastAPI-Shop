@@ -47,7 +47,7 @@ class CartService:
         del cart_data[product_id]
         return cart_data
 
-    def get_cart_deatils(self, cart_data: Dict[int, int]) -> CartResponse:
+    def get_cart_details(self, cart_data: Dict[int, int]) -> CartResponse:
         if not cart_data:
             return CartResponse(item=[], total=0.0, item_count=0)
         product_ids = list(cart_data.keys())
@@ -61,7 +61,7 @@ class CartService:
         for product_id, quantity in cart_data.items():
             if product_id in products_dict:
                 product = products_dict[product_id]
-                subtotal = product.price + quantity
+                subtotal = product.price * quantity
 
                 cart_item = CartItem(
                     product_id=product.id,
@@ -75,5 +75,7 @@ class CartService:
                 total_price += subtotal
                 total_items += quantity
         return CartResponse(
-            items=cart_item, total=round(total_price), items_count=total_items
+            item=cart_items,
+            total=round(total_price, 2),
+            items_count=total_items,
         )
