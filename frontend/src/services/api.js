@@ -6,69 +6,55 @@
 
 import axios from 'axios'
 
-// Жестко прописываем ссылку на твой задеплоенный бэкенд на Render с префиксом /api
+// URL бэкенда на Render
 const API_BASE_URL = 'https://fastapi-backend-6crk.onrender.com/api'
 
-// Создаем экземпляр axios с настройками по умолчанию
+// Создаем экземпляр axios с увеличенным таймаутом (Render free tier засыпает)
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
+    timeout: 30000, // 30 секунд — Render может долго просыпаться
 })
 
-/**
- * API методы для работы с товарами
- */
+// Retry логика: если запрос упал — пробуем ещё раз
+apiClient.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const config = error.config
+        if (!config || config.__retryCount >= 2) {
+            return Promise.reject(error)
+        }
+        config.__retryCount = (config.__retryCount || 0) + 1
+        // Ждём 2 секунды перед повтором
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        return apiClient(config)
+    },
+)
+
 export const productsAPI = {
-    /**
-     * Получить все товары
-     */
     getAll() {
         return apiClient.get('/products')
     },
-
-    /**
-     * Получить товар по ID
-     */
     getById(id) {
         return apiClient.get(`/products/${id}`)
     },
-
-    /**
-     * Получить товары по категории
-     */
     getByCategory(categoryId) {
         return apiClient.get(`/products/category/${categoryId}`)
     },
 }
 
-/**
- * API методы для работы с категориями
- */
 export const categoriesAPI = {
-    /**
-     * Получить все категории
-     */
     getAll() {
         return apiClient.get('/categories')
     },
-
-    /**
-     * Получить категорию по ID
-     */
     getById(id) {
         return apiClient.get(`/categories/${id}`)
     },
 }
 
-/**
- * API методы для работы с корзиной
- */
 export const cartAPI = {
-    /**
-     * Добавить товар в корзину
-     */
     addItem(item, cartData) {
         return apiClient.post('/cart/add', {
             product_id: item.product_id,
@@ -76,17 +62,9 @@ export const cartAPI = {
             cart: cartData,
         })
     },
-
-    /**
-     * Получить содержимое корзины
-     */
     getCart(cartData) {
         return apiClient.post('/cart', cartData)
     },
-
-    /**
-     * Обновить количество товара
-     */
     updateItem(item, cartData) {
         return apiClient.put('/cart/update', {
             product_id: item.product_id,
@@ -94,15 +72,9 @@ export const cartAPI = {
             cart: cartData,
         })
     },
-
-    /**
-     * Удалить товар из корзины
-     */
     removeItem(productId, cartData) {
         return apiClient.delete(`/cart/remove/${productId}`, {
-            data: {
-                cart: cartData,
-            },
+            data: { cart: cartData },
         })
     },
 }
