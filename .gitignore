@@ -81,3 +81,7 @@ shop.db
 .vscode
 celerybeat-schedule
 celerybeat-schedule-wal
+node_modules
+dist
+dist-ssr
+*.local
