@@ -1,4 +1,7 @@
 @import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Убираем конфликтующие стили для #app */
 #app {
