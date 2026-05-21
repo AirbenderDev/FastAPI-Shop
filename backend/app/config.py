@@ -5,12 +5,9 @@ class Settings(BaseSettings):
     app_name: str = "FastAPI Shop | Items"
     debug: bool = True
     database_url: str = "sqlite:///./shop.db"
-    cors_origin: list = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:3000",
-    ]
+
+    cors_origin: list = ["*"]
+
     static_dir: str = "static"
     images_dir: str = "static/images"
 

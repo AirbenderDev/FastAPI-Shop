@@ -1,4 +1,3 @@
-// frontend/src/services/api.js
 /**
  * API сервис для взаимодействия с backend.
  * Централизует все HTTP запросы к FastAPI серверу.
@@ -7,8 +6,8 @@
 
 import axios from 'axios'
 
-// Базовый URL API из переменных окружения или значение по умолчанию
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://fastapi-backend-6crk.onrender.com'
+// Жестко прописываем ссылку на твой задеплоенный бэкенд на Render с префиксом /api
+const API_BASE_URL = 'https://fastapi-backend-6crk.onrender.com/api'
 
 // Создаем экземпляр axios с настройками по умолчанию
 const apiClient = axios.create({
