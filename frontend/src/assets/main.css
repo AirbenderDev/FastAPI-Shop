@@ -1,9 +1,7 @@
-@import './base.css';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Убираем конфликтующие стили для #app */
+@import './base.css';
+
 #app {
   max-width: 100%;
   margin: 0;
@@ -24,7 +22,6 @@ a,
   }
 }
 
-/* Переопределяем проблемные media queries */
 @media (min-width: 1024px) {
   body {
     display: block;
