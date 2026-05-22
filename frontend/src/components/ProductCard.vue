@@ -87,7 +87,7 @@ async function handleAddToCart() {
  * Обработка ошибки загрузки изображения
  */
 function handleImageError(event) {
-    event.target.src = 'https://via.placeholder.com/400x400?text=No+Image'
+  event.target.src = 'https://placehold.co/400x400?text=No+Image'
 }
 </script>
 
