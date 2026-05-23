@@ -15,13 +15,12 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # разрешаем всем, включая Vercel
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Создаём папку static если не существует
 os.makedirs(settings.static_dir, exist_ok=True)
 os.makedirs(settings.images_dir, exist_ok=True)
 
@@ -35,7 +34,6 @@ app.include_router(cart_router)
 @app.on_event("startup")
 def on_startup():
     init_db()
-    # Автоматически заполняем базу данными если она пустая
     _seed_if_empty()
 
 

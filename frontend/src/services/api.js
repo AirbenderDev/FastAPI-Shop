@@ -1,24 +1,15 @@
-/**
- * API сервис для взаимодействия с backend.
- * Централизует все HTTP запросы к FastAPI серверу.
- * Использует axios для выполнения запросов.
- */
-
 import axios from 'axios'
 
-// URL бэкенда на Render
+// URL бэкa
 const API_BASE_URL = 'https://fastapi-backend-6crk.onrender.com/api'
-
-// Создаем экземпляр axios с увеличенным таймаутом (Render free tier засыпает)
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 30000, // 30 секунд — Render может долго просыпаться
+    timeout: 30000,
 })
 
-// Retry логика: если запрос упал — пробуем ещё раз
 apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -27,7 +18,6 @@ apiClient.interceptors.response.use(
             return Promise.reject(error)
         }
         config.__retryCount = (config.__retryCount || 0) + 1
-        // Ждём 2 секунды перед повтором
         await new Promise((resolve) => setTimeout(resolve, 2000))
         return apiClient(config)
     },
