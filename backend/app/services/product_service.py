@@ -51,5 +51,5 @@ class ProductService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Category with id {product_data.category_id} not found",
             )
-        product = self.repository.create(product_data)
+        product = self.product_repository.create(product_data)
         return ProductResponse.model_validate(product)
